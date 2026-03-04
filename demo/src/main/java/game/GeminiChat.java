@@ -11,13 +11,13 @@ static Client client = Client.builder()
         .apiKey(System.getenv("GOOGLE_API_KEY"))
         .build();
 
-    public static void chat(String responseString) {
+    public static String chat(String responseString) {
         GenerateContentResponse response =
             client.models.generateContent(
                 "gemini-3-flash-preview",
                 responseString,
                 null);
 
-        System.out.println(response.text());
+        return response.text();
     }
 }

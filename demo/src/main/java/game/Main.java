@@ -6,8 +6,56 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Welcome to the game!");
-        GeminiChat.chat("Provide a good game description in 2 sentences. The game is about a player who is on a journey to defeat villains and gain points. The player can move around, attack or defend against villains, and participate in a lottery system to restore HP.");
+        String temp = GeminiChat.chat(
+                "Provide a good game description in 20 words. The game is about a player who is on a journey to defeat villains and gain points. The player can move around, attack or defend against villains, and participate in a lottery system to restore HP. Try to use vowels less.");
 
+        if (temp.contains("z")) {
+            int i = temp.length();
+            while (i > 0) {
+                if (temp.indexOf('z', i - 1) < temp.indexOf(' ', i - 1)) {
+                    int z_index = temp.indexOf('z', i - 1);
+                    String before_z = temp.substring(0, z_index);
+                    String after_z = temp.substring(z_index + 1);
+                    temp = before_z + 's' + after_z;
+                }
+                i--;
+            }
+        }
+
+        temp = temp.replace("!", ":)");
+
+
+        double desire_score = 0;
+        int length = temp.length();
+        char letter = temp.charAt(length / 2);
+        int index_of_adventure_word = temp.indexOf("adventure");
+        int lastIndexof_space = temp.lastIndexOf(" ");
+        String tem = temp.toUpperCase();
+        int desire_score_vowels = 0;
+
+        int count = 0;
+        for (int i = 0; i < length; i++) {
+            if (tem.charAt(i) == 'A' || tem.charAt(i) == 'E' || tem.charAt(i) == 'I' || tem.charAt(i) == 'O'
+                    || tem.charAt(i) == 'U') {
+                count++;
+            }
+        }
+        if (letter == 'A' || letter == 'E' || letter == 'I' || letter == 'O' || letter == 'U') {
+            desire_score_vowels = -1;
+        }
+
+        if (index_of_adventure_word >= length / 2) {
+            index_of_adventure_word = -1;
+        }
+
+        desire_score = count * 0.5 + desire_score_vowels * 0.2 + index_of_adventure_word * 0.3
+                + ((length - lastIndexof_space) / length) * 0.1;
+
+        if (desire_score >= 0.5 && temp.isEmpty() == false) {
+            System.out.println(temp.trim());
+        } else {
+            System.out.println("Welsome to this adventure :)".trim());
+        }
         // Player Info
         Scanner scanner = new Scanner(System.in);
 
@@ -117,13 +165,17 @@ public class Main {
                 y_Coordinate_v = y_Coordinate;
             }
             if ((x_Coordinate == x_Coordinate_v && y_Coordinate == y_Coordinate_v)) {
-                System.out.println("You are " + PLAYERNAME + "\n" + "A level " + villain_level + " villain has appear. BE PREPARED!!!");
-                GeminiChat.chat("You are a game villain. Choose a good name. You just encountered a player named " + PLAYERNAME + ". Introduce yourself dramatically in 2 sentences.");
-                    System.out.println();
-                    System.out.print(PLAYERNAME +" : ");
-                    String reply = scanner.nextLine();
+                System.out.println("You are " + PLAYERNAME + "\n" + "A level " + villain_level
+                        + " villain has appear. BE PREPARED!!!");
+                GeminiChat.chat("You are a game villain. Choose a good name. You just encountered a player named "
+                        + PLAYERNAME + ". Introduce yourself dramatically in 2 sentences.");
+                System.out.println();
+                System.out.print(PLAYERNAME + " : ");
+                String reply = scanner.nextLine();
 
-                GeminiChat.chat("You reply to the player reply in a way that after which is just action left. The reply is : " + reply );
+                GeminiChat.chat(
+                        "You reply to the player reply in a way that after which is just action left. The reply is : "
+                                + reply);
                 System.out.println();
 
                 System.out.println("Do you want to attack or defend? (Type 'attack' or 'defend')");
@@ -134,14 +186,16 @@ public class Main {
                     score = score + 5 * villain_level;
                     System.out.println("HP:" + hp);
                     System.out.println("Score:" + score);
-                    GeminiChat.chat("Vilain went away but deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences.");
+                    GeminiChat.chat(
+                            "Vilain went away but deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences.");
                     System.out.println();
-                
+
                 } else if (action.equalsIgnoreCase("defend")) {
                     hp = hp - 1 * villain_level;
                     System.out.println("HP:" + hp);
                     System.out.println("Score:" + score);
-                    GeminiChat.chat("Villain does not went away and deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences.");
+                    GeminiChat.chat(
+                            "Villain does not went away and deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences.");
                     System.out.println();
                 }
             }
