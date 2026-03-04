@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Welcome to the game!");
         String temp = GeminiChat.chat(
-                "Provide a good game description in 20 words. The game is about a player who is on a journey to defeat villains and gain points. The player can move around, attack or defend against villains, and participate in a lottery system to restore HP. Try to use vowels less.");
+                "Provide a good game description in 20 words. The game is about a player who is on a journey to defeat villains and gain points. The player can move around, attack or defend against villains, and participate in a lottery system to restore HP. Try to use vowels less but lines must make sense. just try to use the word with less vowels.");
 
         if (temp.contains("z")) {
             int i = temp.length();
