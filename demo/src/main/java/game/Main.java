@@ -73,7 +73,6 @@ public class Main {
         System.out.printf("Your player name is: %s \n", PLAYERNAME);
         System.out.printf("Your weapon is: %s \n", myWeapon);
         System.out.printf("Your armor is: %s \n", myArmor);
-        System.out.printf("Your Hp is: %d \n", hp);
 
         // Game Instructions and Story
         String InGameMovement = "";
@@ -94,10 +93,10 @@ public class Main {
         // Game Logic
         while (gameState) {
 
-            System.out.println("HP : " + hp);
-                String hpStatus = hp > 50 ? "Healthy 💪" : "Critical ❤️";
-                System.out.println("Status: " + hpStatus);
-                System.out.println("Your Score is: " + score);
+            System.out.printf("Your Hp is: %d \n", hp);
+            String hpStatus = hp > 50 ? "Healthy 💪" : "Critical ❤️";
+            System.out.println("Status: " + hpStatus);
+            System.out.println("Your Score is: " + score);
 
             // wanna continue the game or leave
             if (counter != 0) {
