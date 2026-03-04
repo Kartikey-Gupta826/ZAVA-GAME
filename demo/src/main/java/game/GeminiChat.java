@@ -2,14 +2,15 @@ package game;
 
 import com.google.genai.Client;
 import com.google.genai.types.GenerateContentResponse;
+import io.github.cdimascio.dotenv.Dotenv;  // ✅ add this import
 
 public class GeminiChat {
 
-    // obtain the API key from the environment so we don't hard‑code secrets
-// and avoid a missing-symbol compile error
-static Client client = Client.builder()
-        .apiKey(System.getenv("GOOGLE_API_KEY"))
-        .build();
+    static Dotenv dotenv = Dotenv.load();  // ✅ loads .env file
+
+    static Client client = Client.builder()
+            .apiKey(dotenv.get("GOOGLE_API_KEY"))  // ✅ reads from .env
+            .build();
 
     public static String chat(String responseString) {
         GenerateContentResponse response =
