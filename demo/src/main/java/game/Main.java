@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Welcome to the game!");
         String temp = GeminiChat.chat(
-                "Provide a good game description in 20 words. The game is about a player who is on a journey to defeat villains and gain points. The player can move around, attack or defend against villains, and participate in a lottery system to restore HP. Try to use vowels less but lines must make sense. just try to use the word with less vowels.");
+                "Provide a good game description in 40 words. The game is about a player who is on a journey to defeat villains and gain points. The player can move around, attack or defend against villains, and participate in a lottery system to restore HP. Try to use vowels less but lines must make sense. just try to use the word with less vowels.");
 
         if (temp.contains("z")) {
             int i = temp.length();
@@ -24,7 +24,6 @@ public class Main {
 
         temp = temp.replace("!", ":)");
 
-
         double desire_score = 0;
         int length = temp.length();
         char letter = temp.charAt(length / 2);
@@ -40,15 +39,17 @@ public class Main {
                 count++;
             }
         }
-        if (Character.toUpperCase(letter) == 'A' || Character.toUpperCase(letter) == 'E' || Character.toUpperCase(letter) == 'I' || Character.toUpperCase(letter) == 'O' || Character.toUpperCase(letter) == 'U') {
+        if (Character.toUpperCase(letter) == 'A' || Character.toUpperCase(letter) == 'E'
+                || Character.toUpperCase(letter) == 'I' || Character.toUpperCase(letter) == 'O'
+                || Character.toUpperCase(letter) == 'U') {
             desire_score_vowels = -1;
         }
-        
+
         if (index_of_adventure_word >= length / 2) {
             index_of_adventure_word = -1;
         }
 
-        desire_score = (1 - (count/(double)length)) * 0.5 + desire_score_vowels * 0.2 + index_of_adventure_word * 0.3
+        desire_score = (1 - (count / (double) length)) * 0.5 + desire_score_vowels * 0.2 + index_of_adventure_word * 0.3
                 + ((length - lastIndexof_space) / length) * 0.1;
 
         if (desire_score >= 0.5 && temp.isEmpty() == false) {
@@ -116,6 +117,8 @@ public class Main {
 
             counter++;
 
+            String hpStatus = hp > 50 ? "Healthy 💪" : "Critical ❤️";
+            System.out.println("Status: " + hpStatus);
             System.out.println("Your Score is: " + score);
 
             if (x_Coordinate == 0 && y_Coordinate == 0) {
@@ -184,16 +187,12 @@ public class Main {
                 if (action.equalsIgnoreCase("attack")) {
                     hp = hp - 10 * villain_level;
                     score = score + 5 * villain_level;
-                    System.out.println("HP:" + hp);
-                    System.out.println("Score:" + score);
                     GeminiChat.chat(
                             "Vilain went away but deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences.");
                     System.out.println();
 
                 } else if (action.equalsIgnoreCase("defend")) {
                     hp = hp - 1 * villain_level;
-                    System.out.println("HP:" + hp);
-                    System.out.println("Score:" + score);
                     GeminiChat.chat(
                             "Villain does not went away and deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences.");
                     System.out.println();
@@ -202,6 +201,7 @@ public class Main {
 
             // Lottery System
             if ((x_Coordinate == 3 && y_Coordinate == 3 || hp <= 0)) {
+                System.out.println("YOUR HP IS LESS THAN 0 : " + hp);
                 System.out.println("Lottery System , Guess a number in between 1 - 10 #:o");
                 int guess = scanner.nextInt();
                 scanner.nextLine();
@@ -209,11 +209,7 @@ public class Main {
                 systemNumber = random.nextInt(1, 11);
                 double temp1 = Math.abs((double) (guess - systemNumber) / systemNumber);
 
-                int hp_temp = hp;
-
-                if (hp < 0) {
-                    hp_temp = Math.abs(hp);
-                }
+                int hp_temp = hp < 0 ? Math.abs(hp) : hp;
 
                 if (guess == systemNumber) {
                     System.out.println("HP fully restored ;)");
