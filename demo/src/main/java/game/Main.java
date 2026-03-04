@@ -48,13 +48,13 @@ public class Main {
             index_of_adventure_word = -1;
         }
 
-        desire_score = count * 0.5 + desire_score_vowels * 0.2 + index_of_adventure_word * 0.3
+        desire_score = (1 - (count/(double)length)) * 0.5 + desire_score_vowels * 0.2 + index_of_adventure_word * 0.3
                 + ((length - lastIndexof_space) / length) * 0.1;
 
         if (desire_score >= 0.5 && temp.isEmpty() == false) {
             System.out.println(temp.trim());
         } else {
-            System.out.println("Welsome to this adventure :)".trim());
+            System.out.println("Welcome to this adventure :)".trim());
         }
         // Player Info
         Scanner scanner = new Scanner(System.in);
@@ -168,7 +168,7 @@ public class Main {
                 System.out.println("You are " + PLAYERNAME + "\n" + "A level " + villain_level
                         + " villain has appear. BE PREPARED!!!");
                 GeminiChat.chat("You are a game villain. Choose a good name. You just encountered a player named "
-                        + PLAYERNAME + ". Introduce yourself dramatically in 2 sentences.");
+                        + PLAYERNAME + ". Introduce yourself dramatically in 30 words.");
                 System.out.println();
                 System.out.print(PLAYERNAME + " : ");
                 String reply = scanner.nextLine();
