@@ -40,10 +40,10 @@ public class Main {
                 count++;
             }
         }
-        if (letter == 'A' || letter == 'E' || letter == 'I' || letter == 'O' || letter == 'U') {
+        if (Character.toUpperCase(letter) == 'A' || Character.toUpperCase(letter) == 'E' || Character.toUpperCase(letter) == 'I' || Character.toUpperCase(letter) == 'O' || Character.toUpperCase(letter) == 'U') {
             desire_score_vowels = -1;
         }
-
+        
         if (index_of_adventure_word >= length / 2) {
             index_of_adventure_word = -1;
         }
@@ -95,7 +95,7 @@ public class Main {
 
             // wanna continue the game or leave
             if (counter != 0) {
-                if (hp <= 0) {
+                if (hp < 0) {
                     System.out.println("You lost all your HP, Game Over :(");
                     break;
                 }
