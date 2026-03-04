@@ -94,6 +94,11 @@ public class Main {
         // Game Logic
         while (gameState) {
 
+            System.out.println("HP : " + hp);
+                String hpStatus = hp > 50 ? "Healthy 💪" : "Critical ❤️";
+                System.out.println("Status: " + hpStatus);
+                System.out.println("Your Score is: " + score);
+
             // wanna continue the game or leave
             if (counter != 0) {
                 if (hp < 0) {
@@ -193,11 +198,6 @@ public class Main {
                             "Villain does not went away and deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences.");
                     System.out.println();
                 }
-
-                System.out.println("HP : " + hp);
-                String hpStatus = hp > 50 ? "Healthy 💪" : "Critical ❤️";
-                System.out.println("Status: " + hpStatus);
-                System.out.println("Your Score is: " + score);
             }
 
             // Lottery System
