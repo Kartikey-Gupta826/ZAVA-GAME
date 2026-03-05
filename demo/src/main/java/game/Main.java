@@ -149,7 +149,7 @@ public class Main {
 
     public static void Lottery_System(int x_Coordinate, int y_Coordinate, int hp, Scanner scanner, Random random, int systemNumber) {
         // Lottery System
-        if ((x_Coordinate == 3 && y_Coordinate == 3 || hp <= 0)) {
+        if ((x_Coordinate == 3 && y_Coordinate == 3 || hp < 0)) {
             System.out.println("YOUR HP IS LESS THAN 0 : " + hp);
             System.out.println("Lottery System , Guess a number in between 1 - 10 #:o");
             int guess = scanner.nextInt();
