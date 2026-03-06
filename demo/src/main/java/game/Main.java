@@ -12,7 +12,7 @@ public class Main {
     static String gamestateChange = "";
     static int score = 0;
 
-    public static void Description() {
+    public static void description() {
         String temp = GeminiChat.chat(
                 "Provide a good game description in 40 words. The game is about a player who is on a journey to defeat villains and gain points. The player can move around, attack or defend against villains, and participate in a lottery system to restore HP. Try to use vowels less but lines must make sense. just try to use the word with less vowels.");
 
@@ -68,7 +68,7 @@ public class Main {
         return;
     }
 
-    public static int Movement(String InGameMovement, int x_Coordinate, int y_Coordinate, String StartingPoint,
+    public static int movement(String InGameMovement, int x_Coordinate, int y_Coordinate, String StartingPoint,
             Scanner scanner, int coordinates_vector) {
         // Movement System
 
@@ -110,7 +110,7 @@ public class Main {
         return coordinates_vector;
     }
 
-    public static void Villain(int x_Coordinate, int y_Coordinate, int counter, String PLAYERNAME, Scanner scanner,
+    public static void villain(int x_Coordinate, int y_Coordinate, int counter, String PLAYERNAME, Scanner scanner,
             int villain_level, Random random) {
 
         // attack or defend
@@ -159,9 +159,9 @@ public class Main {
         return;
     }
 
-    public static int Lottery_System(int x_Coordinate, int y_Coordinate, int hp_just_practise, Scanner scanner, Random random) {
+    public static int lottery_system(int x_Coordinate, int y_Coordinate, int hp_just_practise, Scanner scanner, Random random) {
         // Lottery System
-        if ((x_Coordinate == 3 && y_Coordinate == 3 || hp_just_practise < 0)) {
+        if ((x_Coordinate == 3 && y_Coordinate == 3) || (hp_just_practise < 0)) {
             System.out.println(" YOUR HP IS LESS THAN 0 : " + hp_just_practise);
             System.out.println("Lottery System , Guess a number in between 1 - 10 #:o");
             int guess = scanner.nextInt();
@@ -224,7 +224,7 @@ public class Main {
 
         System.out.println("@- - - - - - - - - - - - - - - - - - - -@");
 
-        Description();
+        description();
 
         System.out.println("Enter your name:");
         final String PLAYERNAME = scanner.nextLine();
@@ -266,17 +266,17 @@ public class Main {
 
             System.out.println("----------------------------------------");
 
-            coordinates_vector = Movement(InGameMovement, x_Coordinate, y_Coordinate, StartingPoint, scanner, coordinates_vector);
+            coordinates_vector = movement(InGameMovement, x_Coordinate, y_Coordinate, StartingPoint, scanner, coordinates_vector);
             x_Coordinate = coordinates_vector / 10;
             y_Coordinate = coordinates_vector % 10;
 
             System.out.println("----------------------------------------");
 
-            Villain(x_Coordinate, y_Coordinate, counter, PLAYERNAME, scanner, villain_level, random);
+            villain(x_Coordinate, y_Coordinate, counter, PLAYERNAME, scanner, villain_level, random);
 
             System.out.println("----------------------------------------");
 
-            hp = Lottery_System(x_Coordinate, y_Coordinate, hp, scanner, random);
+            hp = lottery_system(x_Coordinate, y_Coordinate, hp, scanner, random);
 
             System.out.println("----------------------------------------");
 
