@@ -82,27 +82,27 @@ public class Main {
 
         System.out.println("Current Position: (" + x_Coordinate + ", " + y_Coordinate + ")");
         System.out.println(
-                "Where do you want to move? (Type 'up', 'down', 'left', or 'right')(max x and y are (5,5) and min x and y are (0,0))");
+                "Where do you want to move? (Type 'up', 'down', 'left', or 'right' first alphabet only)(max x and y are (5,5) and min x and y are (0,0))");
         InGameMovement = scanner.nextLine();
 
         switch (InGameMovement.toLowerCase()) {
 
-            case "down":
+            case "d":
                 if (y_Coordinate > 0) {
                     y_Coordinate = y_Coordinate - 1;
                 }
                 break;
-            case "left":
+            case "l":
                 if (x_Coordinate > 0) {
                     x_Coordinate = x_Coordinate - 1;
                 }
                 break;
-            case "right":
+            case "r":
                 if (x_Coordinate < 5) {
                     x_Coordinate = x_Coordinate + 1;
                 }
                 break;
-            case "up":
+            case "u":
                 if (y_Coordinate < 5) {
                     y_Coordinate = y_Coordinate + 1;
                 }
@@ -115,52 +115,42 @@ public class Main {
     }
 
     public static void villain(int x_Coordinate, int y_Coordinate, int counter, String PLAYERNAME, Scanner scanner,
-            int villain_level, Random random) {
+            int villain_level, Random random, int x_Coordinate_v, int y_Coordinate_v) {
 
         System.out.println("----------------------------------------");
 
-        // attack or defend
-        int x_Coordinate_v = random.nextInt(0, 5);
-        int y_Coordinate_v = random.nextInt(0, 5);
-
         villain_level = random.nextInt(1, 11);
 
-        if (counter % 3 == 0) {
-            x_Coordinate_v = x_Coordinate;
-            y_Coordinate_v = y_Coordinate;
-        }
-        if ((x_Coordinate == x_Coordinate_v && y_Coordinate == y_Coordinate_v)) {
-            System.out.println("You are " + PLAYERNAME + "\n" + "A level " + villain_level
-                    + " villain has appear. BE PREPARED!!!");
+        System.out.println("You are " + PLAYERNAME + "\n" + "A level " + villain_level
+                + " villain has appear. BE PREPARED!!!");
 
-            System.out.println(
-                    GeminiChat.chat("You are a game villain. Choose a good name. You just encountered a player named "
-                            + PLAYERNAME + ". Introduce yourself dramatically in 30 words."));
-            System.out.println();
-            System.out.print(PLAYERNAME + " : ");
-            String reply = scanner.nextLine();
+        System.out.println(
+                GeminiChat.chat("You are a game villain. Choose a good name. You just encountered a player named "
+                        + PLAYERNAME + ". Introduce yourself dramatically in 30 words."));
+        System.out.println();
+        System.out.print(PLAYERNAME + " : ");
+        String reply = scanner.nextLine();
 
+        System.out.println(GeminiChat.chat(
+                "You reply to the player reply in a way that after which is just action left in 2 sentences. The reply is : "
+                        + reply));
+        System.out.println();
+
+        System.out.println("Do you want to attack or defend? (Type 'attack' or 'defend')");
+        String action = scanner.nextLine().trim();
+
+        if (action.equalsIgnoreCase("attack")) {
+            hp = hp - 10 * villain_level;
+            score = score + 5 * villain_level;
             System.out.println(GeminiChat.chat(
-                    "You reply to the player reply in a way that after which is just action left in 2 sentences. The reply is : "
-                            + reply));
+                    "Vilain went away but deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences."));
             System.out.println();
 
-            System.out.println("Do you want to attack or defend? (Type 'attack' or 'defend')");
-            String action = scanner.nextLine().trim();
-
-            if (action.equalsIgnoreCase("attack")) {
-                hp = hp - 10 * villain_level;
-                score = score + 5 * villain_level;
-                System.out.println(GeminiChat.chat(
-                        "Vilain went away but deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences."));
-                System.out.println();
-
-            } else if (action.equalsIgnoreCase("defend")) {
-                hp = hp - 1 * villain_level;
-                System.out.println(GeminiChat.chat(
-                        "Villain does not went away and deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences."));
-                System.out.println();
-            }
+        } else if (action.equalsIgnoreCase("defend")) {
+            hp = hp - 1 * villain_level;
+            System.out.println(GeminiChat.chat(
+                    "Villain does not went away and deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences."));
+            System.out.println();
         }
         return;
     }
@@ -170,40 +160,38 @@ public class Main {
         System.out.println("----------------------------------------");
 
         // Lottery System
-        if ((x_Coordinate == 3 && y_Coordinate == 3) || (hp_just_practise < 0)) {
-            System.out.println(" YOUR HP IS LESS THAN 0 : " + hp_just_practise);
-            System.out.println("Lottery System , Guess a number in between 1 - 10 #:o");
-            int guess = scanner.nextInt();
-            scanner.nextLine();
+        System.out.println(" YOUR HP : " + hp_just_practise);
+        System.out.println("Lottery System , Guess a number in between 1 - 10 #:o");
+        int guess = scanner.nextInt();
+        scanner.nextLine();
 
-            int systemNumber = random.nextInt(1, 11);
-            double temp1 = Math.abs((double) (guess - systemNumber) / systemNumber);
+        int systemNumber = random.nextInt(1, 11);
+        double temp1 = Math.abs((double) (guess - systemNumber) / systemNumber);
 
-            if (hp_just_practise == 0) {
-                hp_just_practise = 20;
-                return hp_just_practise;
-            }
-            int hp_temp = hp_just_practise < 0 ? Math.abs(hp_just_practise) : hp_just_practise;
+        if (hp_just_practise == 0) {
+            hp_just_practise = 20;
+            return hp_just_practise;
+        }
+        int hp_temp = hp_just_practise < 0 ? Math.abs(hp_just_practise) : hp_just_practise;
 
-            if (guess == systemNumber) {
-                System.out.println("HP fully restored ;)");
-                hp_just_practise = 100;
-            }
+        if (guess == systemNumber) {
+            System.out.println("HP fully restored ;)");
+            hp_just_practise = 100;
+        }
 
-            else if (temp1 >= 0.8) {
-                hp_just_practise = (int) (hp_just_practise + hp_temp * 1);
-                System.out.println("HP increased by 100% ;)" + "\nHP:" + hp_just_practise);
-            }
+        else if (temp1 >= 0.8) {
+            hp_just_practise = (int) (hp_just_practise + hp_temp * 1);
+            System.out.println("HP increased by 100% ;)" + "\nHP:" + hp_just_practise);
+        }
 
-            else if (temp1 >= 0.5) {
-                hp_just_practise = (int) (hp_just_practise + hp_temp * 0.5);
-                System.out.println("HP increased by 50% ;)" + "\nHP:" + hp_just_practise);
-            }
+        else if (temp1 >= 0.5) {
+            hp_just_practise = (int) (hp_just_practise + hp_temp * 0.5);
+            System.out.println("HP increased by 50% ;)" + "\nHP:" + hp_just_practise);
+        }
 
-            else {
-                hp_just_practise = (int) (hp_just_practise + hp_temp * 0.3);
-                System.out.println("HP increased by 30% ;)" + "\nHP:" + hp_just_practise);
-            }
+        else {
+            hp_just_practise = (int) (hp_just_practise + hp_temp * 0.3);
+            System.out.println("HP increased by 30% ;)" + "\n");
         }
         return hp_just_practise;
     }
@@ -277,9 +265,22 @@ public class Main {
             x_Coordinate = coordinates_vector / 10;
             y_Coordinate = coordinates_vector % 10;
 
-            villain(x_Coordinate, y_Coordinate, counter, PLAYERNAME, scanner, villain_level, random);
+            // attack or defend
+            int x_Coordinate_v = random.nextInt(0, 5);
+            int y_Coordinate_v = random.nextInt(0, 5);
 
-            hp = lottery_system(x_Coordinate, y_Coordinate, hp, scanner, random);
+            if (counter % 3 == 0) {
+                x_Coordinate_v = x_Coordinate;
+                y_Coordinate_v = y_Coordinate;
+            }
+            if ((x_Coordinate == x_Coordinate_v && y_Coordinate == y_Coordinate_v)) {
+                villain(x_Coordinate, y_Coordinate, counter, PLAYERNAME, scanner, villain_level, random, x_Coordinate_v,
+                        y_Coordinate_v);
+            }
+
+            if ((x_Coordinate == 3 && y_Coordinate == 3) || (hp <= 0)) {
+                hp = lottery_system(x_Coordinate, y_Coordinate, hp, scanner, random);
+            }
         }
         scanner.close();
     }
