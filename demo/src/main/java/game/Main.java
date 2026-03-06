@@ -72,7 +72,7 @@ public class Main {
     public static int movement(String InGameMovement, int x_Coordinate, int y_Coordinate, String StartingPoint,
             Scanner scanner, int coordinates_vector) {
 
-        System.out.println("----------------------------------------");
+        System.out.println("**********************************************************");
 
         // Movement System
 
@@ -117,7 +117,7 @@ public class Main {
     public static void villain(int x_Coordinate, int y_Coordinate, int counter, String PLAYERNAME, Scanner scanner,
             int villain_level, Random random, int x_Coordinate_v, int y_Coordinate_v) {
 
-        System.out.println("----------------------------------------");
+        System.out.println("**********************************************************");
 
         villain_level = random.nextInt(1, 11);
 
@@ -157,21 +157,99 @@ public class Main {
 
     public static int lottery_system(int x_Coordinate, int y_Coordinate, int hp_just_practise, Scanner scanner,
             Random random) {
-        System.out.println("----------------------------------------");
-
-        // Lottery System
-        System.out.println(" YOUR HP : " + hp_just_practise);
-        System.out.println("Lottery System , Guess a number in between 1 - 10 #:o");
-        int guess = scanner.nextInt();
-        scanner.nextLine();
-
-        int systemNumber = random.nextInt(1, 11);
-        double temp1 = Math.abs((double) (guess - systemNumber) / systemNumber);
+        System.out.println("**********************************************************");
 
         if (hp_just_practise == 0) {
             hp_just_practise = 20;
+            System.out.println("Now your hp has been increased by a little!!");
             return hp_just_practise;
         }
+        // Lottery System
+        System.out.println(" YOUR HP : " + hp_just_practise);
+        System.out.println("Lottery System , Roll The Dice #:o");
+        int guess = scanner.nextInt();
+        switch (guess) {
+            case 1:
+                System.out.println(
+                    """
+                    -------
+                   |       |
+                   |   ●   |               
+                   |       |
+                    -------
+                            
+                            """
+                );
+                break;
+            case 2:
+                System.out.println(
+                    """
+                    -------
+                   |  ●    |
+                   |       |               
+                   |    ●  |
+                    -------
+                            
+                            """
+                );
+                break;
+
+            case 3:
+                System.out.println(
+                    """
+                    -------
+                   |  ●    |
+                   |   ●   |               
+                   |    ●  |
+                    -------
+                            
+                            """
+                );
+                break;
+            case 4:
+                System.out.println(
+                    """
+                    -------
+                   | ●   ● |
+                   |       |               
+                   | ●   ● |
+                    -------
+                            
+                            """
+                );
+                break;
+            case 5:
+                System.out.println(
+                    """
+                    -------
+                   | ●   ● |
+                   |   ●   |               
+                   | ●   ● |
+                    -------
+                            
+                            """
+                );
+                break;
+            case 6:
+                System.out.println(
+                    """
+                    -------
+                   | ●   ● |
+                   | ●   ● |               
+                   | ●   ● |
+                    -------
+                            
+                            """
+                );
+                break;
+            default:
+                break;
+        }
+        scanner.nextLine();
+
+        int systemNumber = random.nextInt(1, 7);
+        double temp1 = Math.abs((double) (guess - systemNumber) / systemNumber);
+
         int hp_temp = hp_just_practise < 0 ? Math.abs(hp_just_practise) : hp_just_practise;
 
         if (guess == systemNumber) {
@@ -219,7 +297,7 @@ public class Main {
 
         System.out.println("Welcome to the game!");
 
-        System.out.println("@- - - - - - - - - - - - - - - - - - - -@");
+        System.out.println("**********************************************************");
 
         description();
 
@@ -278,7 +356,7 @@ public class Main {
                         y_Coordinate_v);
             }
 
-            if ((x_Coordinate == 3 && y_Coordinate == 3) || (hp <= 0)) {
+            if ((x_Coordinate == 1 && y_Coordinate == 1) || (hp <= 0)) {
                 hp = lottery_system(x_Coordinate, y_Coordinate, hp, scanner, random);
             }
         }
