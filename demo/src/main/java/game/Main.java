@@ -5,6 +5,13 @@ import java.util.Scanner;
 
 public class Main {
 
+    // Player Info
+    static String myWeapon = "Sword";
+    static String myArmor = "Shield";
+    static int hp = 100;
+    static String gamestateChange = "";
+    static int score = 0;
+
     public static void Description() {
         String temp = GeminiChat.chat(
                 "Provide a good game description in 40 words. The game is about a player who is on a journey to defeat villains and gain points. The player can move around, attack or defend against villains, and participate in a lottery system to restore HP. Try to use vowels less but lines must make sense. just try to use the word with less vowels.");
@@ -61,8 +68,8 @@ public class Main {
         return;
     }
 
-    public static void Movement(String InGameMovement, int x_Coordinate, int y_Coordinate, String StartingPoint,
-            Scanner scanner) {
+    public static int Movement(String InGameMovement, int x_Coordinate, int y_Coordinate, String StartingPoint,
+            Scanner scanner, int coordinates_vector) {
         // Movement System
 
         if (x_Coordinate == 0 && y_Coordinate == 0) {
@@ -99,9 +106,12 @@ public class Main {
             default:
                 System.out.println("Invalid movement, try again.");
         }
+        coordinates_vector = x_Coordinate * 10 + y_Coordinate;
+        return coordinates_vector;
     }
 
-    public static void Villain(int x_Coordinate, int y_Coordinate, int counter, String PLAYERNAME, Scanner scanner, int hp, int score, int villain_level, Random random) {
+    public static void Villain(int x_Coordinate, int y_Coordinate, int counter, String PLAYERNAME, Scanner scanner,
+            int villain_level, Random random) {
 
         // attack or defend
         int x_Coordinate_v = random.nextInt(0, 5);
@@ -116,15 +126,17 @@ public class Main {
         if ((x_Coordinate == x_Coordinate_v && y_Coordinate == y_Coordinate_v)) {
             System.out.println("You are " + PLAYERNAME + "\n" + "A level " + villain_level
                     + " villain has appear. BE PREPARED!!!");
-            GeminiChat.chat("You are a game villain. Choose a good name. You just encountered a player named "
-                    + PLAYERNAME + ". Introduce yourself dramatically in 30 words.");
+
+            System.out.println(
+                    GeminiChat.chat("You are a game villain. Choose a good name. You just encountered a player named "
+                            + PLAYERNAME + ". Introduce yourself dramatically in 30 words."));
             System.out.println();
             System.out.print(PLAYERNAME + " : ");
             String reply = scanner.nextLine();
 
-            GeminiChat.chat(
+            System.out.println(GeminiChat.chat(
                     "You reply to the player reply in a way that after which is just action left. The reply is : "
-                            + reply);
+                            + reply));
             System.out.println();
 
             System.out.println("Do you want to attack or defend? (Type 'attack' or 'defend')");
@@ -133,81 +145,66 @@ public class Main {
             if (action.equalsIgnoreCase("attack")) {
                 hp = hp - 10 * villain_level;
                 score = score + 5 * villain_level;
-                GeminiChat.chat(
-                        "Vilain went away but deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences.");
+                System.out.println(GeminiChat.chat(
+                        "Vilain went away but deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences."));
                 System.out.println();
 
             } else if (action.equalsIgnoreCase("defend")) {
                 hp = hp - 1 * villain_level;
-                GeminiChat.chat(
-                        "Villain does not went away and deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences.");
+                System.out.println(GeminiChat.chat(
+                        "Villain does not went away and deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences."));
                 System.out.println();
             }
         }
         return;
     }
 
-    public static void Lottery_System(int x_Coordinate, int y_Coordinate, int hp, Scanner scanner, Random random, int systemNumber) {
+    public static int Lottery_System(int x_Coordinate, int y_Coordinate, int hp_just_practise, Scanner scanner, Random random) {
         // Lottery System
-        if ((x_Coordinate == 3 && y_Coordinate == 3 || hp < 0)) {
-            System.out.println("YOUR HP IS LESS THAN 0 : " + hp);
+        if ((x_Coordinate == 3 && y_Coordinate == 3 || hp_just_practise < 0)) {
+            System.out.println(" YOUR HP IS LESS THAN 0 : " + hp_just_practise);
             System.out.println("Lottery System , Guess a number in between 1 - 10 #:o");
             int guess = scanner.nextInt();
             scanner.nextLine();
 
-            systemNumber = random.nextInt(1, 11);
+            int systemNumber = random.nextInt(1, 11);
             double temp1 = Math.abs((double) (guess - systemNumber) / systemNumber);
 
-            int hp_temp = hp < 0 ? Math.abs(hp) : hp;
+            if (hp_just_practise == 0) {
+                hp_just_practise = 20;
+                return hp_just_practise;
+            }
+            int hp_temp = hp_just_practise < 0 ? Math.abs(hp_just_practise) : hp_just_practise;
 
             if (guess == systemNumber) {
                 System.out.println("HP fully restored ;)");
-                hp = 100;
+                hp_just_practise = 100;
             }
 
             else if (temp1 >= 0.8) {
-                hp = (int) (hp + hp_temp * 1);
-                System.out.println("HP increased by 100% ;)" + "\nHP:" + hp);
+                hp_just_practise = (int) (hp_just_practise + hp_temp * 1);
+                System.out.println("HP increased by 100% ;)" + "\nHP:" + hp_just_practise);
             }
 
             else if (temp1 >= 0.5) {
-                hp = (int) (hp + hp_temp * 0.5);
-                System.out.println("HP increased by 50% ;)" + "\nHP:" + hp);
+                hp_just_practise = (int) (hp_just_practise + hp_temp * 0.5);
+                System.out.println("HP increased by 50% ;)" + "\nHP:" + hp_just_practise);
             }
 
             else {
-                hp = (int) (hp + hp_temp * 0.3);
-                System.out.println("HP increased by 30% ;)" + "\nHP:" + hp);
-            }
-
-            if (hp == 0) {
-                hp = 20;
+                hp_just_practise = (int) (hp_just_practise + hp_temp * 0.3);
+                System.out.println("HP increased by 30% ;)" + "\nHP:" + hp_just_practise);
             }
         }
+        return hp_just_practise;
     }
 
     public static void main(String[] args) {
-        System.out.println("Welcome to the game!");
-        Description();
 
-        // Player Info
+        // Game Enviroment Variables
+        Random random = new Random();
         Scanner scanner = new Scanner(System.in);
 
-        String myWeapon = "Sword";
-        String myArmor = "Shield";
-        int hp = 100;
-        String gamestateChange = "";
-        Random random = new Random();
-        int score = 0;
-
-        System.out.println("Enter your name:");
-        final String PLAYERNAME = scanner.nextLine();
-
-        System.out.printf("Your player name is: %s \n", PLAYERNAME);
-        System.out.printf("Your weapon is: %s \n", myWeapon);
-        System.out.printf("Your armor is: %s \n", myArmor);
-
-        // Game Instructions and Story
         String InGameMovement = "";
 
         String StartingPoint = "Journey Start Point";
@@ -219,9 +216,22 @@ public class Main {
 
         int villain_level = 0;
 
-        int systemNumber = 0;
-
         boolean gameState = true;
+
+        int coordinates_vector = 0;
+
+        System.out.println("Welcome to the game!");
+
+        System.out.println("@- - - - - - - - - - - - - - - - - - - -@");
+
+        Description();
+
+        System.out.println("Enter your name:");
+        final String PLAYERNAME = scanner.nextLine();
+
+        System.out.printf("Your player name is: %s \n", PLAYERNAME);
+        System.out.printf("Your weapon is: %s \n", myWeapon);
+        System.out.printf("Your armor is: %s \n", myArmor);
 
         // Game Logic
         while (gameState) {
@@ -253,11 +263,23 @@ public class Main {
             }
 
             counter++;
-            Movement(InGameMovement, x_Coordinate, y_Coordinate, StartingPoint, scanner);
 
-            Villain(x_Coordinate, y_Coordinate, counter, PLAYERNAME, scanner, hp, score, villain_level, random);
+            System.out.println("----------------------------------------");
 
-            Lottery_System(x_Coordinate, y_Coordinate, hp, scanner, random, systemNumber);
+            coordinates_vector = Movement(InGameMovement, x_Coordinate, y_Coordinate, StartingPoint, scanner, coordinates_vector);
+            x_Coordinate = coordinates_vector / 10;
+            y_Coordinate = coordinates_vector % 10;
+
+            System.out.println("----------------------------------------");
+
+            Villain(x_Coordinate, y_Coordinate, counter, PLAYERNAME, scanner, villain_level, random);
+
+            System.out.println("----------------------------------------");
+
+            hp = Lottery_System(x_Coordinate, y_Coordinate, hp, scanner, random);
+
+            System.out.println("----------------------------------------");
+
         }
         scanner.close();
     }
