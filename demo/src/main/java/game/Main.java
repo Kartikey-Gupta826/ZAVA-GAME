@@ -14,12 +14,12 @@ public class Main {
 
     public static void description() {
         String temp = GeminiChat.chat(
-                "Provide a good game description in 40 words. The game is about a player who is on a journey to defeat villains and gain points. The player can move around, attack or defend against villains, and participate in a lottery system to restore HP. Try to use vowels less but lines must make sense. just try to use the word with less vowels.");
+                "Provide a good game description in 40 words. The game is about a player who is on a journey to defeat villains and gain points. The player can move around, attack or defend against villains, and participate in a lottery system to restore HP. Try to use vowels less but lines must make sense. just try to use the word with less vowels.") + " ";
 
         if (temp.contains("z")) {
             int i = temp.length();
             while (i > 0) {
-                if (temp.indexOf('z', i - 1) < temp.indexOf(' ', i - 1)) {
+                if (temp.indexOf('z', i - 1) < temp.indexOf(' ', i - 1) && temp.indexOf('z', i - 1) != -1) {
                     int z_index = temp.indexOf('z', i - 1);
                     String before_z = temp.substring(0, z_index);
                     String after_z = temp.substring(z_index + 1);
@@ -36,8 +36,8 @@ public class Main {
         char letter = temp.charAt(length / 2);
         int index_of_adventure_word = temp.indexOf("adventure");
         int lastIndexof_space = temp.lastIndexOf(" ");
+        int firstIndexof_space = temp.indexOf(" ");
         String tem = temp.toUpperCase();
-        int desire_score_vowels = 0;
 
         int count = 0;
         for (int i = 0; i < length; i++) {
@@ -46,23 +46,23 @@ public class Main {
                 count++;
             }
         }
+
+        int desire_score_vowels = 0;
         if (Character.toUpperCase(letter) == 'A' || Character.toUpperCase(letter) == 'E'
                 || Character.toUpperCase(letter) == 'I' || Character.toUpperCase(letter) == 'O'
                 || Character.toUpperCase(letter) == 'U') {
             desire_score_vowels = -1;
         }
 
-        if (index_of_adventure_word >= length / 2) {
-            index_of_adventure_word = -1;
-        }
+        int adventure_word_score = (index_of_adventure_word >= length / 2) ? 1 : -1;
 
-        desire_score = (1 - (count / (double) length)) * 0.5 + desire_score_vowels * 0.2 + index_of_adventure_word * 0.3
-                + ((length - lastIndexof_space) / length) * 0.1;
+        desire_score = (1 - (count / (double) length)) * 0.5 + desire_score_vowels * 0.2 + adventure_word_score * 0.3
+                + ((length - lastIndexof_space) + (firstIndexof_space)) * 0.05;
 
         if (desire_score >= 0.5 && temp.isEmpty() == false) {
             System.out.println(temp.trim());
         } else {
-            System.out.println("Welcome to this adventure :)".trim());
+            System.out.println("Adventure begins here :)".trim());
         }
 
         return;
