@@ -14,7 +14,8 @@ public class Main {
 
     public static void description() {
         String temp = GeminiChat.chat(
-                "Provide a good game description in 40 words. The game is about a player who is on a journey to defeat villains and gain points. The player can move around, attack or defend against villains, and participate in a lottery system to restore HP. Try to use vowels less but lines must make sense. just try to use the word with less vowels.") + " ";
+                "Provide a good game description in 40 words. The game is about a player who is on a journey to defeat villains and gain points. The player can move around, attack or defend against villains, and participate in a lottery system to restore HP. Try to use vowels less but lines must make sense. just try to use the word with less vowels.")
+                + " ";
 
         if (temp.contains("z")) {
             int i = temp.length();
@@ -70,6 +71,9 @@ public class Main {
 
     public static int movement(String InGameMovement, int x_Coordinate, int y_Coordinate, String StartingPoint,
             Scanner scanner, int coordinates_vector) {
+
+        System.out.println("----------------------------------------");
+
         // Movement System
 
         if (x_Coordinate == 0 && y_Coordinate == 0) {
@@ -113,6 +117,8 @@ public class Main {
     public static void villain(int x_Coordinate, int y_Coordinate, int counter, String PLAYERNAME, Scanner scanner,
             int villain_level, Random random) {
 
+        System.out.println("----------------------------------------");
+
         // attack or defend
         int x_Coordinate_v = random.nextInt(0, 5);
         int y_Coordinate_v = random.nextInt(0, 5);
@@ -135,12 +141,12 @@ public class Main {
             String reply = scanner.nextLine();
 
             System.out.println(GeminiChat.chat(
-                    "You reply to the player reply in a way that after which is just action left. The reply is : "
+                    "You reply to the player reply in a way that after which is just action left in 2 sentences. The reply is : "
                             + reply));
             System.out.println();
 
             System.out.println("Do you want to attack or defend? (Type 'attack' or 'defend')");
-            String action = scanner.nextLine();
+            String action = scanner.nextLine().trim();
 
             if (action.equalsIgnoreCase("attack")) {
                 hp = hp - 10 * villain_level;
@@ -159,7 +165,10 @@ public class Main {
         return;
     }
 
-    public static int lottery_system(int x_Coordinate, int y_Coordinate, int hp_just_practise, Scanner scanner, Random random) {
+    public static int lottery_system(int x_Coordinate, int y_Coordinate, int hp_just_practise, Scanner scanner,
+            Random random) {
+        System.out.println("----------------------------------------");
+
         // Lottery System
         if ((x_Coordinate == 3 && y_Coordinate == 3) || (hp_just_practise < 0)) {
             System.out.println(" YOUR HP IS LESS THAN 0 : " + hp_just_practise);
@@ -237,9 +246,8 @@ public class Main {
         while (gameState) {
 
             System.out.printf("Your Hp is: %d \n", hp);
-            String hpStatus = hp > 50 ? "Healthy 💪" : "Critical ❤️";
-            System.out.println("Status: " + hpStatus);
             System.out.println("Your Score is: " + score);
+            System.out.println("Your current coordinates are: (" + x_Coordinate + ", " + y_Coordinate + ")");
 
             // wanna continue the game or leave
             if (counter != 0) {
@@ -264,22 +272,14 @@ public class Main {
 
             counter++;
 
-            System.out.println("----------------------------------------");
-
-            coordinates_vector = movement(InGameMovement, x_Coordinate, y_Coordinate, StartingPoint, scanner, coordinates_vector);
+            coordinates_vector = movement(InGameMovement, x_Coordinate, y_Coordinate, StartingPoint, scanner,
+                    coordinates_vector);
             x_Coordinate = coordinates_vector / 10;
             y_Coordinate = coordinates_vector % 10;
 
-            System.out.println("----------------------------------------");
-
             villain(x_Coordinate, y_Coordinate, counter, PLAYERNAME, scanner, villain_level, random);
 
-            System.out.println("----------------------------------------");
-
             hp = lottery_system(x_Coordinate, y_Coordinate, hp, scanner, random);
-
-            System.out.println("----------------------------------------");
-
         }
         scanner.close();
     }
