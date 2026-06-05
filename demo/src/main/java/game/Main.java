@@ -13,60 +13,79 @@ public class Main {
     static int score = 0;
 
     public static void description() {
-        String temp = GeminiChat.chat(
-                "Provide a good game description in 40 words. The game is about a player who is on a journey to defeat villains and gain points. The player can move around, attack or defend against villains, and participate in a lottery system to restore HP. Try to use vowels less but lines must make sense. just try to use the word with less vowels.")
-                + " ";
-
-        if (temp.contains("z")) {
-            int i = temp.length();
-            while (i > 0) {
-                if (temp.indexOf('z', i - 1) < temp.indexOf(' ', i - 1) && temp.indexOf('z', i - 1) != -1) {
-                    int z_index = temp.indexOf('z', i - 1);
-                    String before_z = temp.substring(0, z_index);
-                    String after_z = temp.substring(z_index + 1);
-                    temp = before_z + 's' + after_z;
-                }
-                i--;
-            }
-        }
-
-        temp = temp.replace("!", ":)");
-
+        String temp = "";
         double desire_score = 0;
-        int length = temp.length();
-        char letter = temp.charAt(length / 2);
-        int index_of_adventure_word = temp.indexOf("adventure");
-        int lastIndexof_space = temp.lastIndexOf(" ");
-        int firstIndexof_space = temp.indexOf(" ");
-        String tem = temp.toUpperCase();
+        int attempts = 0;
+        int maxAttempts = 6; // try up to 6 times
 
-        int count = 0;
-        for (int i = 0; i < length; i++) {
-            if (tem.charAt(i) == 'A' || tem.charAt(i) == 'E' || tem.charAt(i) == 'I' || tem.charAt(i) == 'O'
-                    || tem.charAt(i) == 'U') {
-                count++;
+        while (attempts < maxAttempts) {
+            attempts++;
+
+            temp = GeminiChat.narrate(
+                    "Write a 40-word RPG game intro." +
+                    "A lone warrior fights through cursed lands, defeats villains, earns glory." +
+                    "Use short, punchy words. Favour consonant-heavy words like: grim, dark, quest, fight, blade, hunt, cursed, blood, trek, foe, wrath, dusk." + 
+                    "Avoid long vowel-heavy words like: illuminate, adventure, experience, opportunity." +
+                    "End with a call to action. No bullet points. No questions."
+                        )
+                    + " ";
+
+            // z → s replacement
+            if (temp.contains("z")) {
+                int i = temp.length();
+                while (i > 0) {
+                    if (temp.indexOf('z', i - 1) < temp.indexOf(' ', i - 1) && temp.indexOf('z', i - 1) != -1) {
+                        int z_index = temp.indexOf('z', i - 1);
+                        temp = temp.substring(0, z_index) + 's' + temp.substring(z_index + 1);
+                    }
+                    i--;
+                }
             }
+
+            temp = temp.replace("!", ":)");
+
+            // ── Scoring (your original logic, untouched) ──
+            int length = temp.length();
+            char letter = temp.charAt(length / 2);
+            int index_of_adventure_word = temp.indexOf("adventure");
+            int lastIndexof_space = temp.lastIndexOf(" ");
+            int firstIndexof_space = temp.indexOf(" ");
+            String tem = temp.toUpperCase();
+
+            int count = 0;
+            for (int i = 0; i < length; i++) {
+                if (tem.charAt(i) == 'A' || tem.charAt(i) == 'E' || tem.charAt(i) == 'I'
+                        || tem.charAt(i) == 'O' || tem.charAt(i) == 'U') {
+                    count++;
+                }
+            }
+
+            int desire_score_vowels = 0;
+            if (Character.toUpperCase(letter) == 'A' || Character.toUpperCase(letter) == 'E'
+                    || Character.toUpperCase(letter) == 'I' || Character.toUpperCase(letter) == 'O'
+                    || Character.toUpperCase(letter) == 'U') {
+                desire_score_vowels = -1;
+            }
+
+            int adventure_word_score = (index_of_adventure_word >= length / 2) ? 1 : -1;
+
+            desire_score = (1 - (count / (double) length)) * 0.5
+                    + desire_score_vowels * 0.2
+                    + adventure_word_score * 0.3
+                    + ((length - lastIndexof_space) + firstIndexof_space) * 0.05;
+
+            // ── Pass? Use it. Fail? Try again ──
+            if (desire_score >= 0.25 && !temp.isEmpty()) {
+                System.out.println(temp.trim());
+                return;
+            }
+
+            System.out.println(
+                    "[Attempt " + attempts + " score: " + String.format("%.2f", desire_score) + " — retrying...]");
         }
 
-        int desire_score_vowels = 0;
-        if (Character.toUpperCase(letter) == 'A' || Character.toUpperCase(letter) == 'E'
-                || Character.toUpperCase(letter) == 'I' || Character.toUpperCase(letter) == 'O'
-                || Character.toUpperCase(letter) == 'U') {
-            desire_score_vowels = -1;
-        }
-
-        int adventure_word_score = (index_of_adventure_word >= length / 2) ? 1 : -1;
-
-        desire_score = (1 - (count / (double) length)) * 0.5 + desire_score_vowels * 0.2 + adventure_word_score * 0.3
-                + ((length - lastIndexof_space) + (firstIndexof_space)) * 0.05;
-
-        if (desire_score >= 0.5 && temp.isEmpty() == false) {
-            System.out.println(temp.trim());
-        } else {
-            System.out.println("Adventure begins here :)".trim());
-        }
-
-        return;
+        // All attempts failed — use fallback
+        System.out.println("Adventure begins here :)");
     }
 
     public static int movement(String InGameMovement, int x_Coordinate, int y_Coordinate, String StartingPoint,
@@ -88,21 +107,25 @@ public class Main {
         switch (InGameMovement.toLowerCase()) {
 
             case "d":
+            case "down":
                 if (y_Coordinate > 0) {
                     y_Coordinate = y_Coordinate - 1;
                 }
                 break;
             case "l":
+            case "left":
                 if (x_Coordinate > 0) {
                     x_Coordinate = x_Coordinate - 1;
                 }
                 break;
             case "r":
+            case "right":
                 if (x_Coordinate < 5) {
                     x_Coordinate = x_Coordinate + 1;
                 }
                 break;
             case "u":
+            case "up":
                 if (y_Coordinate < 5) {
                     y_Coordinate = y_Coordinate + 1;
                 }
@@ -114,45 +137,51 @@ public class Main {
         return coordinates_vector;
     }
 
-    public static void villain(int x_Coordinate, int y_Coordinate, int counter, String PLAYERNAME, Scanner scanner,
-            int villain_level, Random random, int x_Coordinate_v, int y_Coordinate_v) {
+    public static void villain_action(int x_Coordinate, int y_Coordinate, int counter,
+            String PLAYERNAME, Scanner scanner, Random random) {
 
         System.out.println("**********************************************************");
 
-        villain_level = random.nextInt(1, 11);
+        // Fresh history, set player name
+        GeminiChat.resetVillain(PLAYERNAME);
 
-        System.out.println("You are " + PLAYERNAME + "\n" + "A level " + villain_level
-                + " villain has appear. BE PREPARED!!!");
+        int villain_level = random.nextInt(1, 11);
+        System.out.println("A level " + villain_level + " villain has appeared. BE PREPARED!!!");
 
-        System.out.println(
-                GeminiChat.chat("You are a game villain. Choose a good name. You just encountered a player named "
-                        + PLAYERNAME + ". Introduce yourself dramatically in 30 words."));
+        // Step 1: Villain intro
+        String intro = GeminiChat.villainIntro();
+        System.out.println(intro);
         System.out.println();
+
+        // Step 2: Player replies
         System.out.print(PLAYERNAME + " : ");
         String reply = scanner.nextLine();
 
-        System.out.println(GeminiChat.chat(
-                "You reply to the player reply in a way that after which is just action left in 2 sentences. The reply is : "
-                        + reply));
+        // Step 3: Villain replies — history handled internally
+        System.out.println(GeminiChat.villainReply(reply));
         System.out.println();
 
+        // Step 4: Combat
         System.out.println("Do you want to attack or defend? (Type 'attack' or 'defend')");
         String action = scanner.nextLine().trim();
 
-        if (action.equalsIgnoreCase("attack")) {
-            hp = hp - 10 * villain_level;
-            score = score + 5 * villain_level;
-            System.out.println(GeminiChat.chat(
-                    "Vilain went away but deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences."));
-            System.out.println();
+        int damage;
+        String closingPrompt;
 
-        } else if (action.equalsIgnoreCase("defend")) {
-            hp = hp - 1 * villain_level;
-            System.out.println(GeminiChat.chat(
-                    "Villain does not went away and deal some damage. Appropriate dialogue for it as a closing scene in 2 sentences."));
-            System.out.println();
+        if (action.equalsIgnoreCase("attack")) {
+            damage = 10 * villain_level;
+            hp -= damage;
+            score += 5 * villain_level;
+            closingPrompt = "The villain flees after taking a hit but wounds the hero first. 1 sentence.";
+        } else {
+            damage = 1 * villain_level;
+            hp -= damage;
+            closingPrompt = "The villain stands firm and wounds the hero badly. 1 sentence.";
         }
-        return;
+
+        System.out.println("You took " + damage + " damage! HP remaining: " + hp);
+        System.out.println(GeminiChat.narrate(closingPrompt)); // narrator closes the scene
+        System.out.println();
     }
 
     public static int lottery_system(int x_Coordinate, int y_Coordinate, int hp_just_practise, Scanner scanner,
@@ -171,76 +200,70 @@ public class Main {
         switch (guess) {
             case 1:
                 System.out.println(
-                    """
-                    -------
-                   |       |
-                   |   ●   |               
-                   |       |
-                    -------
-                            
-                            """
-                );
+                        """
+                                 -------
+                                |       |
+                                |   ●   |
+                                |       |
+                                 -------
+
+                                         """);
                 break;
             case 2:
                 System.out.println(
-                    """
-                    -------
-                   |  ●    |
-                   |       |               
-                   |    ●  |
-                    -------
-                            
-                            """
-                );
+                        """
+                                 -------
+                                |  ●    |
+                                |       |
+                                |    ●  |
+                                 -------
+
+                                         """);
                 break;
 
             case 3:
                 System.out.println(
-                    """
-                    -------
-                   |  ●    |
-                   |   ●   |               
-                   |    ●  |
-                    -------
-                            
-                            """
-                );
+                        """
+                                 -------
+                                |  ●    |
+                                |   ●   |
+                                |    ●  |
+                                 -------
+
+                                         """);
                 break;
             case 4:
                 System.out.println(
-                    """
-                    -------
-                   | ●   ● |
-                   |       |               
-                   | ●   ● |
-                    -------
-                            
-                            """
-                );
+                        """
+                                 -------
+                                | ●   ● |
+                                |       |
+                                | ●   ● |
+                                 -------
+
+                                         """);
                 break;
             case 5:
                 System.out.println(
-                    """
-                    -------
-                   | ●   ● |
-                   |   ●   |               
-                   | ●   ● |
-                    -------
-                            
-                            """
-                );
+                        """
+                                 -------
+                                | ●   ● |
+                                |   ●   |
+                                | ●   ● |
+                                 -------
+
+                                         """);
                 break;
             case 6:
                 System.out.println(
-                    """
-                    -------
-                   | ●   ● |
-                   | ●   ● |               
-                   | ●   ● |
-                    -------
-                            
-                            """
-                );
+                        """
+                                 -------
+                                | ●   ● |
+                                | ●   ● |
+                                | ●   ● |
+                                 -------
+
+                                         """);
                 break;
             default:
                 break;
@@ -276,27 +299,19 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // Game Enviroment Variables
         Random random = new Random();
         Scanner scanner = new Scanner(System.in);
 
         String InGameMovement = "";
-
         String StartingPoint = "Journey Start Point";
 
         int x_Coordinate = 0;
         int y_Coordinate = 0;
-
         int counter = 0;
-
-        int villain_level = 0;
-
         boolean gameState = true;
-
         int coordinates_vector = 0;
 
         System.out.println("Welcome to the game!");
-
         System.out.println("**********************************************************");
 
         description();
@@ -308,29 +323,21 @@ public class Main {
         System.out.printf("Your weapon is: %s \n", myWeapon);
         System.out.printf("Your armor is: %s \n", myArmor);
 
-        // Game Logic
         while (gameState) {
 
-            System.out.printf("Your Hp is: %d \n", hp);
+            System.out.printf("\nYour HP is: %d \n", hp);
             System.out.println("Your Score is: " + score);
             System.out.println("Your current coordinates are: (" + x_Coordinate + ", " + y_Coordinate + ")");
 
-            // wanna continue the game or leave
             if (counter != 0) {
-                if (hp < 0) {
-                    System.out.println("You lost all your HP, Game Over :(");
-                    break;
-                }
                 if (score >= 60) {
                     System.out.println("Congratulations! You won the game with a score of " + score + "!");
                     break;
                 }
-                System.out.println("Wanna continue the loop :) (type Y/N) ");
+                System.out.println("Wanna continue? (Y/N)");
                 gamestateChange = scanner.nextLine();
 
-                if (gamestateChange.equals("Y") || gamestateChange.equals("y")) {
-                    gameState = true;
-                } else if (gamestateChange.equalsIgnoreCase("N")) {
+                if (gamestateChange.equalsIgnoreCase("N")) {
                     gameState = false;
                     continue;
                 }
@@ -338,12 +345,13 @@ public class Main {
 
             counter++;
 
+            // Movement
             coordinates_vector = movement(InGameMovement, x_Coordinate, y_Coordinate, StartingPoint, scanner,
                     coordinates_vector);
             x_Coordinate = coordinates_vector / 10;
             y_Coordinate = coordinates_vector % 10;
 
-            // attack or defend
+            // Villain spawn
             int x_Coordinate_v = random.nextInt(0, 5);
             int y_Coordinate_v = random.nextInt(0, 5);
 
@@ -351,15 +359,23 @@ public class Main {
                 x_Coordinate_v = x_Coordinate;
                 y_Coordinate_v = y_Coordinate;
             }
-            if ((x_Coordinate == x_Coordinate_v && y_Coordinate == y_Coordinate_v)) {
-                villain(x_Coordinate, y_Coordinate, counter, PLAYERNAME, scanner, villain_level, random, x_Coordinate_v,
-                        y_Coordinate_v);
+
+            if (x_Coordinate == x_Coordinate_v && y_Coordinate == y_Coordinate_v) {
+                villain_action(x_Coordinate, y_Coordinate, counter, PLAYERNAME, scanner, random);
+
+                // Immediate HP check after combat
+                if (hp <= 0) {
+                    System.out.println("You lost all your HP, Game Over :(");
+                    break;
+                }
             }
 
-            if ((x_Coordinate == 1 && y_Coordinate == 1) || (hp <= 0)) {
+            // Lottery shrine at (1,1)
+            if (x_Coordinate == 1 && y_Coordinate == 1) {
                 hp = lottery_system(x_Coordinate, y_Coordinate, hp, scanner, random);
             }
         }
+
         scanner.close();
     }
 }
