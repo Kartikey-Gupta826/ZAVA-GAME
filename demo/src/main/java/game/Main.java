@@ -44,7 +44,7 @@ public class Main {
 
             temp = temp.replace("!", ":)");
 
-            // ── Scoring (your original logic, untouched) ──
+            // ── Scoring ──
             int length = temp.length();
             char letter = temp.charAt(length / 2);
             int index_of_adventure_word = temp.indexOf("adventure");
